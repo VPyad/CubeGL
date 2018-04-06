@@ -1,19 +1,49 @@
 package com.example.vpyad.cubegl;
 
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.pm.ConfigurationInfo;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.example.vpyad.cubegl.Renderers.Cube2GlSurfaceView;
 import com.example.vpyad.cubegl.Renderers.MyGLSurfaceView;
-import com.example.vpyad.cubegl.Renderers.OpenGL20Renderer;
 import com.example.vpyad.cubegl.Renderers.OpenGLRenderer;
 
 public class MainActivity extends AppCompatActivity {
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (detectOpenGLES30()) {
+            //so we know it a opengl 3.0 and use our extended GLsurfaceview.
+            setContentView(new Cube2GlSurfaceView(this));
+        } else {
+            // This is where you could create an OpenGL ES 2.0 and/or 1.x compatible
+            // renderer if you wanted to support both ES 1 and ES 2.
+            Log.e("openglcube", "OpenGL ES 3.0 not supported on device.  Exiting...");
+            finish();
+
+        }
+
+    }
+
+    private boolean detectOpenGLES30() {
+        ActivityManager am =
+                (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        ConfigurationInfo info = am.getDeviceConfigurationInfo();
+        return (info.reqGlEsVersion >= 0x30000);
+    }
+
+
+    // for 2D shapes:
+    /*
     private GLSurfaceView mGLView;
 
     @Override
@@ -66,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
             }
         }
-    }
+    }*/
 
     /*@Override
     protected void onCreate(Bundle savedInstanceState) {
