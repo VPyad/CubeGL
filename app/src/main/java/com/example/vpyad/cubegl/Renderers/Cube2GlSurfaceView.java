@@ -10,30 +10,24 @@ public class Cube2GlSurfaceView extends GLSurfaceView {
 
     public Cube2GlSurfaceView(Context context) {
         super(context);
-        // Create an OpenGL ES 3.0 context.
+
+        // создание OpenGL ES 3.0 контекста.
         setEGLContextClientVersion(3);
 
         super.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 
-        // Set the Renderer for drawing on the GLSurfaceView
+        // устанавливаем класс для рендера
         myRender = new Cube2Renderer(context);
         setRenderer(myRender);
-
-        // Render the view only when there is a change in the drawing data
         setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
     }
 
-
-    //private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
     private static final float TOUCH_SCALE_FACTOR = 0.015f;
     private float mPreviousX;
     private float mPreviousY;
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        // MotionEvent reports input details from the touch screen
-        // and other input controls. In this case, you are only
-        // interested in events where the touch position changed.
 
         float x = e.getX();
         float y = e.getY();
@@ -42,8 +36,7 @@ public class Cube2GlSurfaceView extends GLSurfaceView {
             case MotionEvent.ACTION_MOVE:
 
                 float dx = x - mPreviousX;
-                //subtract, so the cube moves the same direction as your finger.
-                //with plus it moves the opposite direction.
+                // вычитаем для того, чтобы куб двигался в том же направлении что и жест
                 myRender.setX(myRender.getX() - (dx * TOUCH_SCALE_FACTOR));
 
                 float dy = y - mPreviousY;

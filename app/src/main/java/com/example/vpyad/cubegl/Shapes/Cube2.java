@@ -15,10 +15,10 @@ public class Cube2 {
     private int mColorHandle;
     private FloatBuffer mVertices;
 
-    //initial size of the cube.  set here, so it is easier to change later.
-    float size = 0.4f;
+    // size of cube
+    float size = 0.5f;
 
-    //this is the initial data, which will need to translated into the mVertices variable in the consturctor.
+    // initial data for cube
     float[] mVerticesData = new float[]{
             ////////////////////////////////////////////////////////////////////
             // FRONT
@@ -97,19 +97,20 @@ public class Cube2 {
     float colorgreen[] = Cube2Color.green();
     float coloryellow[] = Cube2Color.yellow();
 
-    //vertex shader code
+    // вершинный шейдер
     String vShaderStr =
-            "#version 300 es 			  \n"
+            "#version 300 es 			  \n" // version of shader
                     + "uniform mat4 uMVPMatrix;     \n"
-                    + "in vec4 vPosition;           \n"
+                    + "in vec4 vPosition;           \n" // input parameter
                     + "void main()                  \n"
                     + "{                            \n"
                     + "   gl_Position = uMVPMatrix * vPosition;  \n"
                     + "}                            \n";
-    //fragment shader code.
+
+    // фрагментный шейдер
     String fShaderStr =
             "#version 300 es		 			          	\n"
-                    + "precision mediump float;					  	\n"
+                    + "precision mediump float;					  	\n" // точность вычисления
                     + "uniform vec4 vColor;	 			 		  	\n"
                     + "out vec4 fragColor;	 			 		  	\n"
                     + "void main()                                  \n"
@@ -119,11 +120,8 @@ public class Cube2 {
 
     String TAG = "Cube";
 
-
-    //finally some methods
-    //constructor
     public Cube2() {
-        //first setup the mVertices correctly.
+        //установка вершин куба
         mVertices = ByteBuffer
                 .allocateDirect(mVerticesData.length * 4)
                 .order(ByteOrder.nativeOrder())
@@ -131,34 +129,33 @@ public class Cube2 {
                 .put(mVerticesData);
         mVertices.position(0);
 
-        //setup the shaders
+        // подготовка шейдеров
         int vertexShader;
         int fragmentShader;
         int programObject;
         int[] linked = new int[1];
 
-        // Load the vertex/fragment shaders
+        // загрузка шейдеров
         vertexShader = Cube2Renderer.LoadShader(GLES30.GL_VERTEX_SHADER, vShaderStr);
         fragmentShader = Cube2Renderer.LoadShader(GLES30.GL_FRAGMENT_SHADER, fShaderStr);
 
-        // Create the program object
+        // создание программного opengl
         programObject = GLES30.glCreateProgram();
 
         if (programObject == 0) {
-            Log.e(TAG, "So some kind of error, but what?");
+            Log.e(TAG, "something went wrong");
             return;
         }
 
+        // добавление шейдеров к программе
         GLES30.glAttachShader(programObject, vertexShader);
         GLES30.glAttachShader(programObject, fragmentShader);
-
-        // Bind vPosition to attribute 0
         GLES30.glBindAttribLocation(programObject, 0, "vPosition");
 
-        // Link the program
+        // связываем созданную программу
         GLES30.glLinkProgram(programObject);
 
-        // Check the link status
+        // проверяем статус "свзяывания"
         GLES30.glGetProgramiv(programObject, GLES30.GL_LINK_STATUS, linked, 0);
 
         if (linked[0] == 0) {
@@ -168,71 +165,59 @@ public class Cube2 {
             return;
         }
 
-        // Store the program object
         mProgramObject = programObject;
-
-        //now everything is setup and ready to draw.
     }
 
     public void draw(float[] mvpMatrix) {
-
-        // Use the program object
         GLES30.glUseProgram(mProgramObject);
 
-        // get handle to shape's transformation matrix
         mMVPMatrixHandle = GLES30.glGetUniformLocation(mProgramObject, "uMVPMatrix");
         Cube2Renderer.checkGlError("glGetUniformLocation");
 
-        // get handle to fragment shader's vColor member
         mColorHandle = GLES30.glGetUniformLocation(mProgramObject, "vColor");
 
-
-        // Apply the projection and view transformation
+        // Применение преобразования проекции и представления
         GLES30.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
         Cube2Renderer.checkGlError("glUniformMatrix4fv");
 
         int VERTEX_POS_INDX = 0;
-        mVertices.position(VERTEX_POS_INDX);  //just in case.  We did it already though.
+        mVertices.position(VERTEX_POS_INDX);
 
-        //add all the points to the space, so they can be correct by the transformations.
-        //would need to do this even if there were no transformations actually.
         GLES30.glVertexAttribPointer(VERTEX_POS_INDX, 3, GLES30.GL_FLOAT,
                 false, 0, mVertices);
         GLES30.glEnableVertexAttribArray(VERTEX_POS_INDX);
 
-        //Now we are ready to draw the cube finally.
-        int startPos =0;
+        // отрисовка куба
+        int startPos = 0;
         int verticesPerface = 6;
 
-        //draw front face
+        // фронтальная сторона
         GLES30.glUniform4fv(mColorHandle, 1, colorblue, 0);
-        GLES30.glDrawArrays(GLES30.GL_TRIANGLES,startPos,verticesPerface);
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, startPos, verticesPerface);
         startPos += verticesPerface;
 
-        //draw back face
+        // задняя сторона
         GLES30.glUniform4fv(mColorHandle, 1, colorcyan, 0);
         GLES30.glDrawArrays(GLES30.GL_TRIANGLES, startPos, verticesPerface);
         startPos += verticesPerface;
 
-        //draw left face
+        // левая сторона
         GLES30.glUniform4fv(mColorHandle, 1, colorred, 0);
-        GLES30.glDrawArrays(GLES30.GL_TRIANGLES,startPos,verticesPerface);
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, startPos, verticesPerface);
         startPos += verticesPerface;
 
-        //draw right face
+        // правая сторона
         GLES30.glUniform4fv(mColorHandle, 1, colorgray, 0);
-        GLES30.glDrawArrays(GLES30.GL_TRIANGLES,startPos,verticesPerface);
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, startPos, verticesPerface);
         startPos += verticesPerface;
 
-        //draw top face
+        // верхняя
         GLES30.glUniform4fv(mColorHandle, 1, colorgreen, 0);
-        GLES30.glDrawArrays(GLES30.GL_TRIANGLES,startPos,verticesPerface);
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, startPos, verticesPerface);
         startPos += verticesPerface;
 
-        //draw bottom face
+        // нижняя сторона
         GLES30.glUniform4fv(mColorHandle, 1, coloryellow, 0);
-        GLES30.glDrawArrays(GLES30.GL_TRIANGLES,startPos,verticesPerface);
-        //last face, so no need to increment.
-
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, startPos, verticesPerface);
     }
 }
