@@ -1,8 +1,10 @@
 package com.example.vpyad.cubegl.Shapes;
 
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 
 public class Cube2Color {
+    @NonNull
     static float[] red() {
         return new float[]{
                 Color.red(Color.RED) / 255f,
@@ -12,6 +14,7 @@ public class Cube2Color {
         };
     }
 
+    @NonNull
     static float[] green() {
         return new float[]{
                 Color.red(Color.GREEN) / 255f,
@@ -21,6 +24,7 @@ public class Cube2Color {
         };
     }
 
+    @NonNull
     static float[] blue() {
         return new float[]{
                 Color.red(Color.BLUE) / 255f,
@@ -30,6 +34,7 @@ public class Cube2Color {
         };
     }
 
+    @NonNull
     static float[] yellow() {
         return new float[]{
                 Color.red(Color.YELLOW) / 255f,
@@ -39,6 +44,7 @@ public class Cube2Color {
         };
     }
 
+    @NonNull
     static float[] cyan() {
         return new float[]{
                 Color.red(Color.CYAN) / 255f,
@@ -48,6 +54,7 @@ public class Cube2Color {
         };
     }
 
+    @NonNull
     static float[] gray() {
         return new float[]{
                 Color.red(Color.GRAY) / 255f,
