@@ -28,8 +28,16 @@ public class Cube2Renderer implements GLSurfaceView.Renderer {
     private final float[] mViewMatrix = new float[16];
     private final float[] mRotationMatrix = new float[16];
 
-    //
+    private float[] lightAmbient = {0.5f, 0.5f, 0.5f, 1.0f};
+    private float[] lightDiffuse = {1.0f, 1.0f, 1.0f, 1.0f};
+    private float[] lightPosition = {0.0f, 0.0f, 2.0f, 1.0f};
+
+    private float xLightPosition, yLightPosition, zLightPosition;
+
     public Cube2Renderer(Context context) {
+        xLightPosition = 0.3f;
+        yLightPosition = 0.2f;
+        zLightPosition = 0.5f;
     }
 
     public static int LoadShader(int type, String shaderSrc) {
@@ -86,7 +94,9 @@ public class Cube2Renderer implements GLSurfaceView.Renderer {
     // инициализация шейдера и программы
     //
     public void onSurfaceCreated(GL10 glUnused, EGLConfig config) {
-        GLES30.glClearColor(0.9f, .9f, 0.9f, 0.9f);
+        // uncomment for light scene background color
+        //GLES30.glClearColor(0.9f, .9f, 0.9f, 0.9f);
+
         mCube = new Cube2();
     }
 

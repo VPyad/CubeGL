@@ -13,16 +13,26 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
     private Cube cube = new Cube();
     private float cubeRotation;
 
+    private float[] lightAmbient = {0.5f, 0.5f, 0.5f, 1.0f};
+    private float[] lightDiffuse = {1.0f, 1.0f, 1.0f, 1.0f};
+    private float[] lightPosition = {0.0f, 0.0f, 2.0f, 1.0f};
+
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         gl.glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
 
         gl.glClearDepthf(1.0f);
-        gl.glEnable(GL10.GL_DEPTH_TEST);
+        //gl.glEnable(GL10.GL_DEPTH_TEST);
         gl.glDepthFunc(GL10.GL_LEQUAL);
 
         gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT,
                 GL10.GL_NICEST);
+
+        gl.glLightfv(GL10.GL_LIGHT1, GL10.GL_AMBIENT, lightAmbient, 0);
+        gl.glLightfv(GL10.GL_LIGHT1, GL10.GL_DIFFUSE, lightDiffuse, 0);
+        gl.glLightfv(GL10.GL_LIGHT1, GL10.GL_POSITION, lightPosition, 0);
+        gl.glEnable(GL10.GL_LIGHT1);   // Enable Light 1 (NEW)
+        gl.glEnable(GL10.GL_LIGHT0);   // Enable the default Light 0 (NEW)
     }
 
     @Override
