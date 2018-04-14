@@ -161,7 +161,7 @@ public class TextureCubeRenderer implements GLSurfaceView.Renderer {
      * These are handles to our texture data.
      */
     private int mBrickDataHandle;
-    private int mGrassDataHandle;
+    // private int mGrassDataHandle;
 
     /**
      * Temporary place to save the min and mag filter, in case the activity was restarted.
@@ -442,7 +442,7 @@ public class TextureCubeRenderer implements GLSurfaceView.Renderer {
         // Position the eye in front of the origin.
         final float eyeX = 0.0f;
         final float eyeY = 0.0f;
-        final float eyeZ = -0.5f;
+        final float eyeZ = 0.0f; // -0.5f - original
 
         // We are looking toward the distance
         final float lookX = 0.0f;
@@ -451,7 +451,7 @@ public class TextureCubeRenderer implements GLSurfaceView.Renderer {
 
         // Set our up vector. This is where our head would be pointing were we holding the camera.
         final float upX = 0.0f;
-        final float upY = 1.0f;
+        final float upY = 1.0f; // 1.0f; // original
         final float upZ = 0.0f;
 
         // Set the view matrix. This matrix can be said to represent the camera position.
@@ -481,13 +481,13 @@ public class TextureCubeRenderer implements GLSurfaceView.Renderer {
         mBrickDataHandle = TextureHelper.loadTexture(mActivityContext, R.drawable.water);
         GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
 
-        if (mQueuedMinFilter != 0) {
+        /*if (mQueuedMinFilter != 0) {
             setMinFilter(mQueuedMinFilter);
         }
 
         if (mQueuedMagFilter != 0) {
             setMagFilter(mQueuedMagFilter);
-        }
+        }*/
 
         // Initialize the accumulated rotation matrix
         Matrix.setIdentityM(mAccumulatedRotation, 0);
@@ -537,7 +537,7 @@ public class TextureCubeRenderer implements GLSurfaceView.Renderer {
         Matrix.setIdentityM(mLightModelMatrix, 0);
         Matrix.translateM(mLightModelMatrix, 0, 0.0f, 0.0f, -2.0f);
         Matrix.rotateM(mLightModelMatrix, 0, angleInDegrees, 0.0f, 1.0f, 0.0f);
-        Matrix.translateM(mLightModelMatrix, 0, 0.0f, 0.0f, 3.5f);
+        Matrix.translateM(mLightModelMatrix, 0, 0.0f, 1.5f, 0.0f); // originally x = 0.0f, y = 0.0f, z = 3.5f
 
         Matrix.multiplyMV(mLightPosInWorldSpace, 0, mLightModelMatrix, 0, mLightPosInModelSpace, 0);
         Matrix.multiplyMV(mLightPosInEyeSpace, 0, mViewMatrix, 0, mLightPosInWorldSpace, 0);
@@ -590,7 +590,7 @@ public class TextureCubeRenderer implements GLSurfaceView.Renderer {
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 
         // Bind the texture to this unit.
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mGrassDataHandle);
+        // GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mGrassDataHandle);
 
         // Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.
         GLES20.glUniform1i(mTextureUniformHandle, 0);
@@ -609,7 +609,7 @@ public class TextureCubeRenderer implements GLSurfaceView.Renderer {
         drawLight();
     }
 
-    public void setMinFilter(final int filter) {
+    /*public void setMinFilter(final int filter) {
         if (mBrickDataHandle != 0 && mGrassDataHandle != 0) {
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mBrickDataHandle);
             GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, filter);
@@ -618,9 +618,9 @@ public class TextureCubeRenderer implements GLSurfaceView.Renderer {
         } else {
             mQueuedMinFilter = filter;
         }
-    }
+    }*/
 
-    public void setMagFilter(final int filter) {
+    /*public void setMagFilter(final int filter) {
         if (mBrickDataHandle != 0 && mGrassDataHandle != 0) {
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mBrickDataHandle);
             GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, filter);
@@ -629,7 +629,7 @@ public class TextureCubeRenderer implements GLSurfaceView.Renderer {
         } else {
             mQueuedMagFilter = filter;
         }
-    }
+    }*/
 
     /**
      * Draws a cube.
